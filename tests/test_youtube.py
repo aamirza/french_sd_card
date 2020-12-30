@@ -2,6 +2,7 @@ import unittest
 from unittest import mock
 
 import youtube
+import youtube_stub
 
 
 class YoutubeTestCase(unittest.TestCase):
@@ -22,17 +23,30 @@ class YoutubeTestCase(unittest.TestCase):
         self.assertTrue(youtube.valid_link(youtube_link),
                         "The YouTube link you entered is invalid.")
 
-    @mock.patch.object('youtube.YoutubeDL', 'extract-info')
+    @mock.patch.object(youtube.YoutubeDL, 'extract_info')
     def test_listPlaylistVideos_returnsList(self, mock_extract_info):
         playlist = self.billboard2019_playlist()
 
+        mock_extract_info.return_value = youtube_stub.extract_info
         playlist_info = youtube.get_playlist_videos_info(playlist)
 
-        mock_extract_info.return_value = ["Video 1", "Video 2"]
         mock_extract_info.assert_called_with(playlist, download=False)
-
         self.assertTrue(isinstance(playlist_info, list),
-                        "Video list did not return a list")
+                        "Video list did not return a dict")
+
+    @mock.patch.object(youtube.YoutubeDL, 'extract_info')
+    def test_playlistVideos_returnsValidYoutubePages(self, mock_extract_info):
+        playlist = self.billboard2019_playlist()
+
+        mock_extract_info.return_value = youtube_stub.extract_info
+        playlist_info = youtube.get_playlist_videos_info(playlist)
+
+        self.assertTrue(youtube.valid_link(playlist_info[0]["webpage_url"]),
+                        "Your playlist does not contain a video")
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
