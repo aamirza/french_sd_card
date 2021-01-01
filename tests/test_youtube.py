@@ -48,37 +48,34 @@ class YoutubeTestCase(unittest.TestCase):
     # downloaded.
 
     def test_downloadPlaylist_downloadsEntirePlaylist(self):
-        self.skipTest("Test to download an entire playlist")
+        self.fail("Test to download an entire playlist")
 
     def test_downloadPlaylist_startAtVideo2_skipsFirstVideo(self):
-        self.skipTest("Test to download a playlist starting at the"
-                      " second video i.e. not downloading the first video")
+        self.fail("Test to download a playlist starting at the"
+                  " second video i.e. not downloading the first video")
 
     def test_downloadPlaylist_invalidPlaylist_raisesError(self):
-        self.skipTest("Test that raises an error before a playlist is "
-                      "downloaded if the playlist URL is invalid.")
+        self.fail("Test that raises an error before a playlist is "
+                  "downloaded if the playlist URL is invalid.")
 
     def test_downloadPlaylist_startAtInvalidNumber_raisesWarning(self):
-        self.skipTest("If no videos are download because 'start at' is a "
-                      "number higher than the number of playlists in a video,"
-                      "this should display some kind of warning or error.")
+        self.fail("If no videos are download because 'start at' is a "
+                  "number higher than the number of playlists in a video,"
+                  "this should display some kind of warning or error.")
 
     def test_downloadPlaylist_updatesLastVideoDownloaded(self):
-        self.skipTest("Once a playlist is downloaded, the index of the last "
-                      "video downloaded should be updated and stored "
-                      "somewhere.")
+        self.fail("Once a playlist is downloaded, the index of the last "
+                  "video downloaded should be updated and stored "
+                  "somewhere.")
 
     def test_downloadPlaylist_downloadsAudioByDefault(self):
-        self.skipTest("For our purposes, we will only be downloading audio."
-                      "Create an option to download video, but download "
-                      "audio by default.")
+        self.fail("For our purposes, we will only be downloading audio."
+                  "Create an option to download video, but download "
+                  "audio by default.")
 
     def test_downloadPlaylist_downloadFolderNotSelected_raisesErrors(self):
-        self.skipTest("If a download folder is not selected, an error needs"
-                      "to be raised.")
-
-
-
+        self.fail("If a download folder is not selected, an error needs"
+                  "to be raised.")
 
 
 if __name__ == '__main__':
