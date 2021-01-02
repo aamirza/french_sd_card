@@ -47,7 +47,10 @@ class YoutubeTestCase(unittest.TestCase):
     # Download playlist starting at certain video index. Store last video
     # downloaded.
 
-    def test_downloadPlaylist_downloadsEntirePlaylist(self):
+    @mock.patch.object(youtube.YoutubeDL, 'download')
+    def test_downloadPlaylist_downloadsEntirePlaylist(self, mock_yt_download):
+        # Needs a file download location.
+        # Link needs to be validated before connecting.
         self.fail("Test to download an entire playlist")
 
     def test_downloadPlaylist_startAtVideo2_skipsFirstVideo(self):
@@ -55,8 +58,11 @@ class YoutubeTestCase(unittest.TestCase):
                   " second video i.e. not downloading the first video")
 
     def test_downloadPlaylist_invalidPlaylist_raisesError(self):
-        self.fail("Test that raises an error before a playlist is "
-                  "downloaded if the playlist URL is invalid.")
+        playlist_url = "https://www.youtube.com/plalist" \
+                       "?list=PLo7NRy1FWJw-NbaoWLw8PrLkQZv0w5e9y"
+        with self.assertRaisesRegex(youtube.InvalidPlaylistError,
+                                    "Playlist URL is invalid"):
+            youtube.download_playlist(playlist_url)
 
     def test_downloadPlaylist_startAtInvalidNumber_raisesWarning(self):
         self.fail("If no videos are download because 'start at' is a "
@@ -74,6 +80,7 @@ class YoutubeTestCase(unittest.TestCase):
                   "audio by default.")
 
     def test_downloadPlaylist_downloadFolderNotSelected_raisesErrors(self):
+        # TODO: Move to file manager
         self.fail("If a download folder is not selected, an error needs"
                   "to be raised.")
 
