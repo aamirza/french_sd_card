@@ -53,10 +53,6 @@ class YoutubeTestCase(unittest.TestCase):
         # Link needs to be validated before connecting.
         self.fail("Test to download an entire playlist")
 
-    def test_downloadPlaylist_startAtVideo2_skipsFirstVideo(self):
-        self.fail("Test to download a playlist starting at the"
-                  " second video i.e. not downloading the first video")
-
     def test_downloadPlaylist_invalidPlaylist_raisesError(self):
         playlist_url = "https://www.youtube.com/plalist" \
                        "?list=PLo7NRy1FWJw-NbaoWLw8PrLkQZv0w5e9y"
