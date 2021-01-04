@@ -2,6 +2,7 @@ import unittest
 from unittest import mock
 
 import youtube
+from youtube import YoutubeDownloader
 import youtube_stub
 
 
@@ -70,10 +71,10 @@ class YoutubeTestCase(unittest.TestCase):
                   "video downloaded should be updated and stored "
                   "somewhere.")
 
-    def test_downloadPlaylist_downloadsAudioByDefault(self):
-        self.fail("For our purposes, we will only be downloading audio."
-                  "Create an option to download video, but download "
-                  "audio by default.")
+    @mock.patch('youtube.YoutubeDL')
+    def test_downloadPlaylist_downloadsAudioByDefault(self, mock_ydl):
+        YoutubeDownloader.download_playlist(self.billboard2019_playlist())
+        mock_ydl.assert_called_with(YoutubeDownloader.download_audio_params)
 
     def test_downloadPlaylist_downloadFolderNotSelected_raisesErrors(self):
         # TODO: Move to file manager
