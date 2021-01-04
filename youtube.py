@@ -12,50 +12,54 @@ class InvalidPlaylistError(Exception):
     pass
 
 
-# Params for YouTubeDL
+class YoutubeDownloader:
+    @property
+    def default_params(self):
+        return {
+            "forcejson": True,
+            "nocheckcertificate": True,
+            "outputdl": f"{str(DOWNLOAD_FOLDER)}/%(title)s.%(ext)s"
+        }
 
-DEFAULT_PARAMS = {
-    "forcejson": True,
-    "nocheckcertificate": True,
-    "outputdl": f"{str(DOWNLOAD_FOLDER)}/%(title)s.%(ext)s"
-}
+    @property
+    def download_audio_params(self):
+        return dict(**self.default_params, postprocessor=[{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }])
 
-DOWNLOAD_AUDIO_PARAMS = dict(**DEFAULT_PARAMS, postprocessor=[
-    {
-        'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
-        'preferredquality': '192',
-    }
-])
+    @property
+    def simulate_download_params(self):
+        return dict(**self.default_params, simulate=True)
 
-SIMULATE_DOWNLOAD_PARAMS = dict(**DEFAULT_PARAMS, simulate=True)
+    @staticmethod
+    def valid_link(url):
+        return url.startswith('https://www.youtube.com/')
 
+    @staticmethod
+    def valid_playlist(url):
+        return url.startswith('https://www.youtube.com/playlist?list=')
 
-# Use YouTube-DL to get list of videos in playlist.
+    @staticmethod
+    def validate_playlist(url):
+        if not valid_playlist_url(url):
+            raise InvalidPlaylistError(f"Playlist URL is invalid: {url}")
 
-def get_playlist_videos_info(playlist):
-    params = SIMULATE_DOWNLOAD_PARAMS
-    with YoutubeDL(params) as ydl:
-        info = ydl.extract_info(playlist, download=False)
-    return info["entries"]
+    @classmethod
+    def get_playlist_videos_info(cls, playlist_url):
+        cls.validate_playlist(playlist_url)
 
+        with YoutubeDL(cls.simulate_download_params) as youtube_dl:
+            info = youtube_dl.extract_info(playlist_url, download=False)
+        return info["entries"]
 
-# Decide which videos you want to download, and which you want to leave,
-# using indices.
+    @classmethod
+    def download_playlist(cls, url, download_audio=True):
+        cls.validate_playlist(url)
 
-def valid_link(url):
-    return url.startswith('https://www.youtube.com/')
+        params = cls.download_audio_params if download_audio else cls.default_params
+        with YoutubeDL(params) as youtube_dl:
+            info = youtube_dl.extract_info(url)
+        return info["entries"]
 
-
-def valid_playlist_url(url):
-    return url.startswith('https://www.youtube.com/playlist?list=')
-
-
-def download_playlist(url, start_at_video=0, download_audio=True):
-    if not valid_playlist_url(url):
-        raise InvalidPlaylistError(f"Playlist URL is invalid: {url}")
-
-    params = DOWNLOAD_AUDIO_PARAMS if download_audio else DEFAULT_PARAMS
-    with YoutubeDL(params) as youtube_download:
-        playlist_info = youtube_download.extract_info(url)
-    return playlist_info
