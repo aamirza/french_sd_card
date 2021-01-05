@@ -6,21 +6,27 @@ YOUTUBE_PLAYLIST = "INSERT YOUTUBE PLAYLIST URL HERE"
 DOWNLOAD_FOLDER = os.path.dirname(__file__) + '/downloads'
 
 
-
 class InvalidPlaylistError(Exception):
     """For when a YouTube playlist URL is invalid"""
     pass
 
 
 class YoutubeDownloader:
+    # These params are necessary to instantiate a YoutubeDL instance.
     DEFAULT_PARAMS = {"forcejson": True, "nocheckcertificate": True,
                       "outputdl": f"{str(DOWNLOAD_FOLDER)}/%(title)s.%(ext)s"}
-    DOWNLOAD_AUDIO_PARAMS = dict(**DEFAULT_PARAMS,
-                                 postprocessors=[{'key': 'FFmpegExtractAudio',
-                                                  'preferredcodec': 'mp3',
-                                                  'preferredquality': '192',}]
-                                 )
     SIMULATE_DOWNLOAD_PARAMS = dict(**DEFAULT_PARAMS, simulate=True)
+
+    DOWNLOAD_AUDIO_PARAMS = dict(
+        **DEFAULT_PARAMS,
+        postprocessors=[
+            {
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }
+        ]
+    )
 
     @staticmethod
     def valid_link(url):
