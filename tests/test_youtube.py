@@ -76,20 +76,10 @@ class YoutubeTestCase(unittest.TestCase):
                   "number higher than the number of playlists in a video,"
                   "this should display some kind of warning or error.")
 
-    def test_downloadPlaylist_updatesLastVideoDownloaded(self):
-        self.fail("Once a playlist is downloaded, the index of the last "
-                  "video downloaded should be updated and stored "
-                  "somewhere.")
-
     @mock.patch('youtube.YoutubeDL')
     def test_downloadPlaylist_downloadsAudioByDefault(self, mock_ydl):
         YoutubeDownloader.download_playlist(self.billboard2019_playlist())
         mock_ydl.assert_called_with(YoutubeDownloader.DOWNLOAD_AUDIO_PARAMS)
-
-    def test_downloadPlaylist_downloadFolderNotSelected_raisesErrors(self):
-        # TODO: Move to file manager
-        self.fail("If a download folder is not selected, an error needs"
-                  "to be raised.")
 
 
 if __name__ == '__main__':
