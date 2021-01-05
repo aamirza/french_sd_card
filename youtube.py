@@ -44,10 +44,13 @@ class YoutubeDownloader:
         return info["entries"]
 
     @classmethod
-    def download_playlist(cls, url, download_audio=True):
+    def download_playlist(cls, url, start_at_video=1, download_audio=True):
         cls.validate_playlist(url)
 
         params = cls.DOWNLOAD_AUDIO_PARAMS if download_audio else cls.DEFAULT_PARAMS
+        if start_at_video > 1:
+            params = dict(**params, playliststart = start_at_video)
+
         with YoutubeDL(params) as youtube_dl:
             info = youtube_dl.extract_info(url)
         return info["entries"]
