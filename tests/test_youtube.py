@@ -55,6 +55,15 @@ class YoutubeTestCase(unittest.TestCase):
         # Link needs to be validated before connecting.
         self.fail("Test to download an entire playlist")
 
+    @mock.patch('youtube.YoutubeDL')
+    def test_downloadPlaylist_startAtVideo2_startsAtVideo2(self, mock_yt_download):
+        playlist = self.billboard2019_playlist()
+
+        YoutubeDownloader.download_playlist(playlist, start_at_video=2)
+        params = dict(**YoutubeDownloader.DOWNLOAD_AUDIO_PARAMS,
+                      playliststart=2)
+        mock_yt_download.assert_called_with(params)
+
     def test_downloadPlaylist_invalidPlaylist_raisesError(self):
         playlist_url = "https://www.youtube.com/plalist" \
                        "?list=PLo7NRy1FWJw-NbaoWLw8PrLkQZv0w5e9y"
