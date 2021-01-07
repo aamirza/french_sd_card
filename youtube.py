@@ -48,27 +48,30 @@ class YoutubeDownloader(Downloader):
         return url.startswith('https://www.youtube.com/playlist?list=')
 
     @classmethod
-    def validate_playlist(cls, url):
+    def raise_error_if_invalid_playlist(cls, url):
+        # TODO: Convert to function wrapper
         if not cls.valid_playlist(url):
             raise InvalidPlaylistError(f"Playlist URL is invalid: {url}")
 
     def get_playlist_videos_info(self, playlist_url):
-        self.validate_playlist(playlist_url)
+        self.raise_error_if_invalid_playlist(playlist_url)
 
         with YoutubeDL(self.default_params) as youtube_dl:
             info = youtube_dl.extract_info(playlist_url, download=False)
         return info["entries"]
 
     def download_playlist(self, url, start_at_video=1, download_audio=True):
-        self.validate_playlist(url)
+        self.raise_error_if_invalid_playlist(url)
 
         params = self.download_audio_params if download_audio else self.default_params
         if start_at_video > 1:
             params = dict(**params, playliststart = start_at_video)
 
-        with YoutubeDL(params) as youtube_dl:
-            info = youtube_dl.extract_info(url)
-        return info["entries"]
+        with YoutubeDL(params) as youtube:
+            playlist_info = youtube.extract_info(url)
+
+        number_of_videos_downloaded = len(playlist_info["entries"])
+        return number_of_videos_downloaded
 
 
 
