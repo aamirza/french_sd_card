@@ -12,12 +12,12 @@ class Downloader(ABC):
             self.download_folder = DOWNLOAD_FOLDER
 
     @abstractmethod
-    def download(self, url, start_at_position=1):
+    def download(self, url: str, start_at_position: int = 1) -> int:
         """Download the video and return what position you downloaded up to."""
         pass
 
     @abstractmethod
-    def get_info(self, url):
+    def get_info(self, url: str):
         """Get information on what is to be downloaded, such as links,
         number of files etc."""
         pass
