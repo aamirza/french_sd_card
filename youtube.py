@@ -12,6 +12,16 @@ class InvalidPlaylistError(Exception):
     pass
 
 
+def raise_error_if_invalid_playlist(func):
+    def wrapper_raise_error_when_invalid_playlist(self, *args, **kwargs):
+        url = args[0]
+        if not YoutubeDownloader.valid_playlist(url):
+            raise InvalidPlaylistError(f"Playlist URL is invalid: {url}")
+        value = func(self, *args, **kwargs)
+        return value
+    return wrapper_raise_error_when_invalid_playlist
+
+
 class YoutubeDownloader(Downloader):
     def __init__(self, download_folder=None):
         super().__init__(download_folder)
@@ -47,22 +57,14 @@ class YoutubeDownloader(Downloader):
     def valid_playlist(url):
         return url.startswith('https://www.youtube.com/playlist?list=')
 
-    @classmethod
-    def raise_error_if_invalid_playlist(cls, url):
-        # TODO: Convert to function wrapper
-        if not cls.valid_playlist(url):
-            raise InvalidPlaylistError(f"Playlist URL is invalid: {url}")
-
+    @raise_error_if_invalid_playlist
     def get_playlist_videos_info(self, playlist_url):
-        self.raise_error_if_invalid_playlist(playlist_url)
-
         with YoutubeDL(self.default_params) as youtube_dl:
             info = youtube_dl.extract_info(playlist_url, download=False)
         return info["entries"]
 
+    @raise_error_if_invalid_playlist
     def download_playlist(self, url, start_at_video=1, download_audio=True):
-        self.raise_error_if_invalid_playlist(url)
-
         params = self.download_audio_params if download_audio else self.default_params
         if start_at_video > 1:
             params = dict(**params, playliststart = start_at_video)
