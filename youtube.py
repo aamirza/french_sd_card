@@ -22,22 +22,6 @@ class YoutubeDownloader(Downloader):
     def get_info(self, url):
         return self.get_playlist_videos_info(url)
 
-    # These params are necessary to instantiate a YoutubeDL instance.
-    DEFAULT_PARAMS = {"forcejson": True, "nocheckcertificate": True,
-                      "outputdl": f"{str(DOWNLOAD_FOLDER)}/%(title)s.%(ext)s"}
-    SIMULATE_DOWNLOAD_PARAMS = dict(**DEFAULT_PARAMS, simulate=True)
-
-    DOWNLOAD_AUDIO_PARAMS = dict(
-        **DEFAULT_PARAMS,
-        postprocessors=[
-            {
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }
-        ]
-    )
-
     @property
     def default_params(self):
         return {"forcejson": True, "nocheckcertificate": True,
@@ -68,19 +52,17 @@ class YoutubeDownloader(Downloader):
         if not cls.valid_playlist(url):
             raise InvalidPlaylistError(f"Playlist URL is invalid: {url}")
 
-    @classmethod
-    def get_playlist_videos_info(cls, playlist_url):
-        cls.validate_playlist(playlist_url)
+    def get_playlist_videos_info(self, playlist_url):
+        self.validate_playlist(playlist_url)
 
-        with YoutubeDL(cls.DOWNLOAD_AUDIO_PARAMS) as youtube_dl:
+        with YoutubeDL(self.default_params) as youtube_dl:
             info = youtube_dl.extract_info(playlist_url, download=False)
         return info["entries"]
 
-    @classmethod
-    def download_playlist(cls, url, start_at_video=1, download_audio=True):
-        cls.validate_playlist(url)
+    def download_playlist(self, url, start_at_video=1, download_audio=True):
+        self.validate_playlist(url)
 
-        params = cls.DOWNLOAD_AUDIO_PARAMS if download_audio else cls.DEFAULT_PARAMS
+        params = self.download_audio_params if download_audio else self.default_params
         if start_at_video > 1:
             params = dict(**params, playliststart = start_at_video)
 
