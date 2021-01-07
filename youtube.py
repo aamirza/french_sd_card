@@ -13,6 +13,7 @@ class InvalidPlaylistError(Exception):
 
 
 def raise_error_if_invalid_playlist(func):
+    """Wrapper function for validating a playlist URL"""
     def wrapper_raise_error_when_invalid_playlist(self, *args, **kwargs):
         url = args[0]
         if not YoutubeDownloader.valid_playlist(url):
