@@ -13,14 +13,14 @@ class InvalidPlaylistError(Exception):
 
 
 class YoutubeDownloader(Downloader):
+    def __init__(self, download_folder=None):
+        super().__init__(download_folder)
+
     def download(self, url, start_at_position=1):
         return self.download_playlist(url, start_at_video=start_at_position)
 
-    def get_info(self):
-        pass
-
-    def __init__(self, download_folder=None):
-        super().__init__(download_folder)
+    def get_info(self, url):
+        return self.get_playlist_videos_info(url)
 
     # These params are necessary to instantiate a YoutubeDL instance.
     DEFAULT_PARAMS = {"forcejson": True, "nocheckcertificate": True,

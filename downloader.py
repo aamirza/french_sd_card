@@ -17,7 +17,7 @@ class Downloader(ABC):
         pass
 
     @abstractmethod
-    def get_info(self):
-        """Get information on what's to be downloaded, such as links,
-        numeber of files etc."""
+    def get_info(self, url):
+        """Get information on what is to be downloaded, such as links,
+        number of files etc."""
         pass
