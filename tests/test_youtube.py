@@ -53,10 +53,11 @@ class YoutubeTestCase(unittest.TestCase):
     # downloaded.
 
     @mock.patch.object(youtube.YoutubeDL, 'extract_info')
-    def test_downloadPlaylist_downloadsEntirePlaylist(self, mock_yt_download):
-        # Needs a file download location.
-        # Link needs to be validated before connecting.
-        self.fail("Test to download an entire playlist")
+    def test_downloadPlaylist_downloadsEntirePlaylist(self, mock_extract_info):
+        playlist = self.billboard2019_playlist()
+
+        self.youtube.download_playlist(playlist)
+        self.assertTrue(mock_extract_info.called)
 
     @mock.patch('youtube.YoutubeDL')
     def test_downloadPlaylist_startAtVideo2_startsAtVideo2(self, mock_yt_download):
@@ -74,10 +75,15 @@ class YoutubeTestCase(unittest.TestCase):
                                     "Playlist URL is invalid"):
             self.youtube.download_playlist(playlist_url)
 
-    def test_downloadPlaylist_startAtInvalidNumber_raisesWarning(self):
-        self.fail("If no videos are download because 'start at' is a "
-                  "number higher than the number of playlists in a video,"
-                  "this should display some kind of warning or error.")
+    @mock.patch.object(youtube.YoutubeDL, 'extract_info')
+    def test_downloadPlaylist_returnsIndexOfLastVideoDownloaded(
+            self, mock_extract_info):
+        playlist_url = self.billboard2019_playlist()
+
+        mock_extract_info.return_value = youtube_stub.extract_info
+        last_video_index = self.youtube.download_playlist(playlist_url)
+
+        self.assertEqual(2, last_video_index)
 
     @mock.patch('youtube.YoutubeDL')
     def test_downloadPlaylist_downloadsAudioByDefault(self, mock_ydl):
