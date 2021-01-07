@@ -2,7 +2,8 @@ import os
 
 from youtube_dl import YoutubeDL
 
-YOUTUBE_PLAYLIST = "INSERT YOUTUBE PLAYLIST URL HERE"
+from downloader import Downloader
+
 DOWNLOAD_FOLDER = os.path.dirname(__file__) + '/downloads'
 
 
@@ -11,7 +12,16 @@ class InvalidPlaylistError(Exception):
     pass
 
 
-class YoutubeDownloader:
+class YoutubeDownloader(Downloader):
+    def download(self, url, start_at_position=1):
+        return self.download_playlist(url, start_at_video=start_at_position)
+
+    def get_info(self):
+        pass
+
+    def __init__(self, download_folder=None):
+        super().__init__(download_folder)
+
     # These params are necessary to instantiate a YoutubeDL instance.
     DEFAULT_PARAMS = {"forcejson": True, "nocheckcertificate": True,
                       "outputdl": f"{str(DOWNLOAD_FOLDER)}/%(title)s.%(ext)s"}
@@ -27,6 +37,23 @@ class YoutubeDownloader:
             }
         ]
     )
+
+    @property
+    def default_params(self):
+        return {"forcejson": True, "nocheckcertificate": True,
+                "outputdl": f"{self.download_folder}/%(title)s.%(ext)s"}
+
+    @property
+    def simulate_download_params(self):
+        return dict(**self.default_params, simulate=True)
+
+    @property
+    def download_audio_params(self):
+        return dict(**self.default_params,
+                    postprocessors=[{'key': 'FFmpegExtractAudio',
+                                     'preferredcodec': 'mp3',
+                                     'preferredquality': '192',}]
+                    )
 
     @staticmethod
     def valid_link(url):
@@ -60,4 +87,6 @@ class YoutubeDownloader:
         with YoutubeDL(params) as youtube_dl:
             info = youtube_dl.extract_info(url)
         return info["entries"]
+
+
 
