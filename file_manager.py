@@ -36,6 +36,13 @@ class FileManager:
     def external_file_path(self, file_name):
         return self.external_download_folder + '/' + file_name
 
+    @staticmethod
+    def _list_directory_files(directory):
+        return os.listdir(directory)
+
+    def list_local_download_files(self):
+        return self._list_directory_files(self.local_download_folder)
+
     def move_file_to_external_storage(self, file_name):
         path = self._get_local_file_path(file_name)
         external_path = self.external_file_path(file_name)
