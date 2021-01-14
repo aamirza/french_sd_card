@@ -22,8 +22,11 @@ class FileManager:
         self.external_download_folder = external_download_folder
 
     @staticmethod
-    def raise_error_if_directory_does_not_exist(directory):
-        if not os.path.isdir(directory):
+    def _directory_exists(directory):
+        return os.path.isdir(directory)
+
+    def raise_error_if_directory_does_not_exist(self, directory):
+        if not self._directory_exists(directory):
             error_message = f"{directory} is not a valid directory."
             raise InvalidDirectoryError(error_message)
 
@@ -36,7 +39,8 @@ class FileManager:
     def move_file_to_external_storage(self, file_name):
         path = self._get_local_file_path(file_name)
         external_path = self.external_file_path(file_name)
-        os.rename(path, external_path)
+        if self._directory_exists(self.external_download_folder):
+            os.rename(path, external_path)
 
 
 
