@@ -12,6 +12,10 @@ class InvalidDirectoryError(Exception):
     pass
 
 
+class ExternalStorageNotFound(Exception):
+    pass
+
+
 class FileManager:
     def __init__(self,
                  local_download_folder=LOCAL_DOWNLOAD_FOLDER,
@@ -48,6 +52,11 @@ class FileManager:
         external_path = self.external_file_path(file_name)
         if self._directory_exists(self.external_download_folder):
             os.rename(path, external_path)
+        else:
+            error_message = f"{self.external_download_folder} not found. " \
+                            f"Ensure your storage is mounted properly and " \
+                            f"that the directory is valid."
+            raise ExternalStorageNotFound(error_message)
 
 
 
