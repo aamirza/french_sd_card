@@ -24,14 +24,15 @@ def raise_error_if_invalid_playlist(func):
 
 
 class YoutubeDownloader(Downloader):
-    def __init__(self, download_folder=None):
-        super().__init__(download_folder)
+    def __init__(self, download_folder=None, url=None):
+        super().__init__(download_folder, url)
 
-    def download(self, url, start_at_position=1):
-        return self.download_playlist(url, start_at_video=start_at_position)
+    def download(self, start_at_position=1):
+        return self.download_playlist(self.url,
+                                      start_at_video=start_at_position)
 
-    def get_info(self, url):
-        return self.get_playlist_videos_info(url)
+    def get_info(self):
+        return self.get_playlist_videos_info(self.url)
 
     @property
     def default_params(self):

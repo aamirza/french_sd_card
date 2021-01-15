@@ -8,7 +8,7 @@ import youtube_stub
 
 class YoutubeTestCase(unittest.TestCase):
     def setUp(self):
-        self.youtube = YoutubeDownloader()
+        self.youtube = YoutubeDownloader(url=self.billboard2019_playlist())
 
     def billboard2019_playlist(self):
         '''Sample playlist'''
