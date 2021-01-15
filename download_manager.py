@@ -10,11 +10,12 @@ class DownloadManager:
         """
         :param downloaders: Object of type Downloader
         """
-        self.downloaders = [downloader for downloader in downloaders]
+        self.services = [downloader for downloader in downloaders]
 
     def download_all(self):
-        for downloader in self.downloaders:
-            downloader.download()
+        '''Download all new audio from all the services'''
+        for service in self.services:
+            service.download()
 
 # Downloader class
     # Init
