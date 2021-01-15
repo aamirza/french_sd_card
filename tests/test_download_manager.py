@@ -1,13 +1,21 @@
 import unittest
+from unittest import mock
+
+import download_manager
+import youtube
+from download_manager import DownloadManager
+from youtube import YoutubeDownloader
 
 
 class FileManagerTestCase(unittest.TestCase):
-    def test_something(self):
-        self.fail()
+    def setUp(self):
+        youtube = YoutubeDownloader()
+        self.dm = DownloadManager(youtube)
 
-    def test_downloadPlaylist_downloadsToFolder(self):
-        self.fail("Downloading a Youtube playlist should download into "
-                  "the designated folder.")
+    @mock.patch.object(youtube.YoutubeDownloader, 'download')
+    def test_downloadPlaylist_downloadsToFolder(self, mock_download):
+        self.dm.download_all()
+        mock_download.assert_called()
 
     def test_downloadPlaylist_updatesLastVideoDownloaded(self):
         self.fail("Once a playlist is downloaded, the index of the last "

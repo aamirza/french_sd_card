@@ -4,6 +4,18 @@ of which files have already been downloaded, and which files are new and
 should be downloaded.
 """
 
+
+class DownloadManager:
+    def __init__(self, *downloaders):
+        """
+        :param downloaders: Object of type Downloader
+        """
+        self.downloaders = [downloader for downloader in downloaders]
+
+    def download_all(self):
+        for downloader in self.downloaders:
+            downloader.download()
+
 # Downloader class
     # Init
         # An iteration of Downloader objects
