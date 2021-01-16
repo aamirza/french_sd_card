@@ -4,8 +4,6 @@ from youtube_dl import YoutubeDL
 
 from downloader import Downloader
 
-DOWNLOAD_FOLDER = os.path.dirname(__file__) + '/downloads'
-
 
 class InvalidPlaylistError(Exception):
     """For when a YouTube playlist URL is invalid"""
