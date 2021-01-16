@@ -8,8 +8,10 @@ import functools
 import os
 import pickle
 
+
 class DownloadManager:
     LAST_POSITIONS_FILE = os.path.dirname(__file__) + "/positions.pk1"
+
     def __init__(self, *downloaders):
         """
         :param downloaders: Object of type Downloader
@@ -40,6 +42,8 @@ class DownloadManager:
             self.update_position(service.url, position)
 
     def get_position(self, url):
+        """Get last video downloaded (as position in playlist) from a
+        specified URL"""
         try:
             position = self.download_positions[url]
         except KeyError:
