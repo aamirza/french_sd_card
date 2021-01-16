@@ -24,7 +24,7 @@ class FileManagerTestCase(unittest.TestCase):
         mock_download.assert_called()
 
     @mock.patch.object(youtube.YoutubeDownloader, 'download')
-    @mock.patch('download_manager.pickle')
+    @mock.patch.object(download_manager.pickle, 'dump')
     def test_downloadAll_updatesLastFileDownloaded(self,
                                                    mock_pickler,
                                                    mock_download):
