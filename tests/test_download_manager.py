@@ -2,9 +2,9 @@ import unittest
 from unittest import mock
 
 import download_manager
-import youtube
+from services import youtube
 from download_manager import DownloadManager
-from youtube import YoutubeDownloader
+from services.youtube import YoutubeDownloader
 
 
 class FileManagerTestCase(unittest.TestCase):

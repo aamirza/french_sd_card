@@ -1,8 +1,8 @@
 import unittest
 from unittest import mock
 
-import youtube
-from youtube import YoutubeDownloader, InvalidPlaylistError
+from services import youtube
+from services.youtube import YoutubeDownloader, InvalidPlaylistError
 import youtube_stub
 
 
@@ -59,7 +59,7 @@ class YoutubeTestCase(unittest.TestCase):
         self.youtube.download_playlist(playlist)
         self.assertTrue(mock_extract_info.called)
 
-    @mock.patch('youtube.YoutubeDL')
+    @mock.patch('services.youtube.YoutubeDL')
     def test_downloadPlaylist_startAtVideo2_startsAtVideo2(self, mock_yt_download):
         playlist = self.billboard2019_playlist()
 
@@ -85,7 +85,7 @@ class YoutubeTestCase(unittest.TestCase):
 
         self.assertEqual(2, last_video_index)
 
-    @mock.patch('youtube.YoutubeDL')
+    @mock.patch('services.youtube.YoutubeDL')
     def test_downloadPlaylist_downloadsAudioByDefault(self, mock_ydl):
         self.youtube.download_playlist(self.billboard2019_playlist())
         mock_ydl.assert_called_with(self.youtube.download_audio_params)
