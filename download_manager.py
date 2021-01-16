@@ -14,13 +14,23 @@ class DownloadManager:
         :param downloaders: Object of type Downloader
         """
         self.services = [downloader for downloader in downloaders]
+        # Download positions stores the last file downloaded in each playlist
+        self.download_positions = self.load_positions()
 
     def download_all(self):
         """Download all new audio from all the services"""
         for service in self.services:
-            service.download()
+            start_at_position = self.get_position(service.url)
+            service.download(start_at_position=start_at_position)
 
-    def get_positions(self):
+    def get_position(self, url):
+        try:
+            position = self.download_positions[url]
+        except KeyError:
+            position = 1
+        return position
+
+    def load_positions(self):
         """Get last download positions for each URL"""
         try:
             with open(self.LAST_POSITIONS_FILE, 'rb') as positions_file:
