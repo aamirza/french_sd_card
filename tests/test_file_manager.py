@@ -30,18 +30,11 @@ class MyTestCase(unittest.TestCase):
                 "the directory is valid."):
             self.fm.move_file_to_external_storage("")
 
-
     @mock.patch.object(file_manager.os, 'listdir')
     def test_listFiles_getsListOfPaths(self, mock_listdir):
         mock_listdir.return_value = []
         self.assertEqual([], self.fm.list_local_download_files(),
                         "List local files should use listdir.")
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
