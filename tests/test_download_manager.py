@@ -64,10 +64,5 @@ class FileManagerTestCase(unittest.TestCase):
         self.assertEqual(expected_return_value, positions)
 
 
-    def test_downloadPlaylist_invalidDownloadFolder_raisesErrors(self):
-        self.fail("If a download folder is invalid, an error needs"
-                  "to be raised.")
-
-
 if __name__ == '__main__':
     unittest.main()
