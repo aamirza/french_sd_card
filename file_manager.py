@@ -57,17 +57,3 @@ class FileManager:
                             f"Ensure your storage is mounted properly and " \
                             f"that the directory is valid."
             raise ExternalStorageNotFound(error_message)
-
-
-
-
-# Function move files
-
-# Function delete files
-
-# Function move to external storage
-
-def move_file_to_external_storage(file):
-    os.rename(file, EXTERNAL_DOWNLOAD_FOLDER)
-
-# Function delete from local storage
