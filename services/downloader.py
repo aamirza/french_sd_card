@@ -1,7 +1,14 @@
 import os
 from abc import ABC, abstractmethod
 
-DOWNLOAD_FOLDER = os.path.dirname(__file__) + '/downloads'
+
+def get_download_folder():
+    current_directory = os.path.dirname(__file__)
+    parent_directory = '/'.join(current_directory.split('/')[:-1])
+    return parent_directory + '/downloads'
+
+
+DOWNLOAD_FOLDER = get_download_folder()
 
 
 class Downloader(ABC):
