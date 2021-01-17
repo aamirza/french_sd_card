@@ -41,7 +41,7 @@ class YoutubeDownloader(Downloader):
     def default_params(self):
         """"Params for YoutubeDL"""
         return {"forcejson": True, "nocheckcertificate": True,
-                "outputdl": f"{self.download_folder}/%(title)s.%(ext)s"}
+                "outtmpl": f"{self.download_folder}/%(title)s.%(ext)s"}
 
     @property
     def simulate_download_params(self):
@@ -51,10 +51,11 @@ class YoutubeDownloader(Downloader):
     @property
     def download_audio_params(self):
         """"Params for YoutubeDL"""
-        return dict(**self.default_params,
+        return dict(format="bestaudio/best",
                     postprocessors=[{'key': 'FFmpegExtractAudio',
                                      'preferredcodec': 'mp3',
-                                     'preferredquality': '192',}]
+                                     'preferredquality': '192',}],
+                    **self.default_params
                     )
 
     @staticmethod
