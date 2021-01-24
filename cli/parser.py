@@ -12,6 +12,15 @@ COMMANDS = (
 )
 
 
+def get_command(args):
+    parser = argparse.ArgumentParser(prog=PROGRAM_NAME,
+                                     description=PROGRAM_DESCRIPTION)
+    parser.add_argument("Command", choices=COMMANDS, type=str,
+                        metavar="command", nargs=1, action='store')
+    parsed_args = parser.parse_args(args)
+    return parsed_args.Command[0]
+
+
 def main():
     parser = argparse.ArgumentParser(prog=PROGRAM_NAME,
                                      description=PROGRAM_DESCRIPTION)
